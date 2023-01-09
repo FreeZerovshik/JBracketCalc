@@ -1,5 +1,7 @@
 package org.example;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -7,36 +9,33 @@ public class Main {
         Scanner sc = new Scanner(System.in);
 
         String inputText = sc.nextLine();
-        StringBuilder tmpStr = new StringBuilder();
-        StringBuilder resultStr = new StringBuilder();
+        List<Integer> openBrackets = new ArrayList<>();
+        List<Integer> closeBrackets = new ArrayList<>();
 
-        int openBracketsCnt = 0;
-        int resultCntBrackets = 0;
-        
+        int idx = 0;
+
         for (char c: inputText.toCharArray()) {
             if (c == '(') {
-                openBracketsCnt += 1;
-                tmpStr.append(c);
-            } else if (c == ')' && openBracketsCnt == 1 ) {
-                resultCntBrackets += 1;
-
-                resultStr.append(tmpStr.append(c));
-                tmpStr.setLength(0);
-                openBracketsCnt = 0;
-            } else if (c == ')' && openBracketsCnt >0) {
-                openBracketsCnt -= 1;
-                tmpStr.append(c);
-                resultCntBrackets +=1;
+                openBrackets.add(idx);
+            } else if (c == ')' && openBrackets.size() > 0 ) {
+                openBrackets.remove(openBrackets.size()-1);
+            } else if (c == ')') {
+                closeBrackets.add(idx);
             }
+
+            idx++;
         }
 
-        if (openBracketsCnt > 0 ) {
-            String s = tmpStr.substring(openBracketsCnt);
-            resultStr.append(s);
+        idx = 0;
+        StringBuilder resultStr = new StringBuilder();
+
+        for (char c: inputText.toCharArray()) {
+            if (!openBrackets.contains(idx) && !closeBrackets.contains(idx)) resultStr.append(c);
+
+            idx++;
         }
 
-        if (resultCntBrackets > 0 ) System.out.format("%d - %s", resultCntBrackets*2,  resultStr);
-        else System.out.println(resultCntBrackets);
-
+        if (resultStr.length()>0) System.out.printf("%d - %s", resultStr.length(), resultStr);
+        else System.out.println(resultStr.length());
     }
 }
